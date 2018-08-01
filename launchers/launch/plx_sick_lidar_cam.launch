@@ -1,0 +1,24 @@
+<launch>
+    <arg name="robot_id" default="pioneer"/>
+    <arg name="robot_name" default="pioneer_lx"/>
+    <arg name="laser_env_topic" default="env_scan"/>
+    <arg name="cam_env_topic" default="env_cam"/>
+    <arg name="tf_prefix" default="$(arg robot_id)"/>
+    
+    <node pkg="tf" type="static_transform_publisher" name="sick_camera_broadcaster" args="0.05 0 0.22 1.62 3.141592 1.57 $(arg robot_id)/laser_frame  $(arg robot_id)/camera_frame 100"/>
+
+    <!--node name="rplidarNode"		pkg="rplidar_ros" type="rplidarNode" output="screen">
+	<param name="serial_port" 	type="string"	value="/dev/rplidar"/>
+	<param name="serial_baudrate"	type="string" 	value="115200"/>
+	<param name="frame_id"		type="string"	value="$(arg tf_prefix)/laser_env_frame"/>
+	<param name="inverted"		type="bool"	value="false"/>
+	<param name="angle_compensate"  type="bool" 	value="true"/>
+    </node-->
+
+    <node name="gmapping" pkg="gmapping" type="slam_gmapping" output="screen">
+	<param name="base_frame" type="string" value="$(arg tf_prefix)/base_link"/>
+	<param name="odom_frame" type="string" value="$(arg tf_prefix)/odom"/>
+	<param name="map_frame" type="string" value="$(arg tf_prefix)/map"/>
+	<remap from="scan" to="/pioneer_lx/RosAria/S3Series_1_laserscan"/>
+    </node>
+</launch>

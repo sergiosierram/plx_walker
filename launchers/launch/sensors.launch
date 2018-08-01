@@ -1,0 +1,24 @@
+<launch>
+  <group ns="pioneer_lx_u">
+
+  	<arg name="robot_id" default="pioneer_u"/>
+
+	<node pkg="tf" type="static_transform_publisher" name="laser_camera_user_broadcaster" args="0 0 0.05 1.61 3.14 1.57 $(arg robot_id)/laser_user $(arg robot_id)/cam_user 100"/>
+
+  	<node name="usb_cam" pkg="usb_cam" type="usb_cam_node" output="screen" >
+    		<param name="video_device" value="/dev/video0" />
+    		<param name="image_width" value="320" />
+    		<param name="image_height" value="240" />
+	    	<param name="pixel_format" value="yuyv" />
+    		<param name="camera_frame_id" value="usb_cam" />
+	    	<param name="io_method" value="mmap"/>
+		<param name="camera_frame_id" type="string" value="$(arg robot_id)/cam_user"/>
+  	</node>
+
+  	<node name="hokuyo"	pkg="hokuyo_node"	type="hokuyo_node"	respawn="false"	output="screen">
+    		<param name="port" type="string" value="/dev/ttyACM0"/>
+	    	<param name="intensity" type="bool" value="false"/>
+	    	<param name="frame_id" type="string" value="$(arg robot_id)/laser_user"/>	
+  	</node>
+  </group>
+</launch>

@@ -1,0 +1,15 @@
+<!--Launch file for minimal requirements to interface the Pioneer LX -->
+<launch>
+    <arg name="robot_name" default="plxbot"/>
+
+    <node name="RosAria"	pkg="rosaria"	type="RosAria"	output="screen">
+      <param name="publish_aria_lasers"	type="bool"	value="true"/>
+      <param name="odom_frame" type="string" value="odom"/>
+      <param name="base_link_frame" type="string" value="base_link"/>
+      <param name="laser_frame" type="string" value="laser_frame"/>
+      <param name="sonar_frame" type="string" value="base_link"/>
+    </node>
+
+    <!--node name="security" pkg="plx_walker_security" type="security.py" output="screen"/>
+    <node name="switch" pkg="plx_walker_security" type="switch.py" output="screen"/-->
+</launch>

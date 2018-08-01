@@ -1,0 +1,16 @@
+obstacle_range: 14
+raytrace_range: 14
+
+footprint: [[0.4, -0.30], [0.4, 0.3], [-0.4,0.3], [-0.4, -0.3]]
+
+plugins:
+   - {name: obstacle_layer, type: "costmap_2d::ObstacleLayer"}
+   - {name: inflation_layer, type: "costmap_2d::InflationLayer"}
+
+obstacle_layer:
+   observation_sources: laser_scan
+   laser_scan: {data_type: LaserScan, topic: /RosAria/S3Series_1_laserscan, sensor_frame: laser_frame, marking: true, clearing: true}
+   #sonar_scan: {data_type: PointCloud2, topic: /RosAria/sonar_pointcloud2, sensor_frame: base_link, marking: true, clearing: true, obstacle_range: 0.45, observation_persistence: 2.0}
+   track_unknown_space: true
+   unkown_cost_value: 0.1
+

@@ -1,0 +1,22 @@
+<launch>
+    <arg name="robot_name" default="plxbot"/>
+
+    <node pkg="tf" type="static_transform_publisher" name="baselink_laseruser" args="-0.30 0 0.44 3.1416 0 0 base_link laser 100"/>
+
+    <!--node name="RosAria" pkg="rosaria" type="RosAria" output="screen">
+    	<param name="publish_aria_lasers"	type="bool"	value="true"/>
+		<param name="odom_frame" type="string" value="odom"/>
+		<param name="base_link_frame" type="string" value="base_link"/>
+		<param name="laser_frame" type="string" value="laser_frame"/>
+		<param name="sonar_frame" type="string" value="base_link"/>
+  </node-->
+
+  <node name="hokuyo" pkg="hokuyo_node" type="hokuyo_node" respawn="false" output="screen">
+    <param name="calibrate_time" type="bool" value="false"/>
+    <param name="max_ang" type="double" value="0.5235987755982988"/>
+    <param name="min_ang" type="double" value="-0.5235987755982988"/>
+    <param name="port" type="string" value="/dev/ttyACM0"/>
+    <param name="intensity" type="bool" value="false"/>
+  </node>
+
+</launch>

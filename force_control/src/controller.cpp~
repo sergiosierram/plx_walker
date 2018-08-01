@@ -1,0 +1,63 @@
+#include <force_controller/controller.h>
+#include <message_filters/subscriber.h>
+#include <message_filters/time_synchronizer.h>
+
+using namespace message_filters;
+
+SimpleController::SimpleController():
+	l_scale_(1.0),
+	a_scale_(1.0)
+  {
+	
+	nh_.param("left_axis_x", left_x_, DEFAULT_LEFT_AXIS_X);
+    nh_.param("left_axis_y", left_y_, DEFAULT_LEFT_AXIS_Y);
+    nh_.param("right_axis_x", right_x_, DEFAULT_RIGHT_AXIS_X);
+    nh_.param("right_axis_y", right_y_, DEFAULT_RIGHT_AXIS_Y);
+	nh_.param("scale_linear", l_scale_, DEFAULT_SCALE_LINEAR);
+	nh_.param("scale_angular", a_scale_, DEFAULT_SCALE_ANGULAR);
+	nh_.param("force_topic_left", frc_left_topic_, frc_left_topic_);
+	nh_.param("force_topic_right", frc_right_topic_, frc_right_topic_);
+	nh_.param("cmd_vel_topic", cmd_vel_topic_, cmd_vel_topic_);
+
+	cmd_vel_pub_ = nh_.advertise<geometry_msgs::Twist>(cmd_vel_topic_, 1);
+	
+	message_filters::Subscriber<geometry_msgs::Wrench> frc_lt_sub(nh_, frc_left_topic_,1);
+	message_filters::Subscriber<geometry_msgs::Wrench> frc_rt_sub(nh_, frc_right_topic_,1);
+	TimeSynchronizer<geometry_msgs::Wrench, geometry_msgs::Wrench> sync(frc_lt_sub, frc_rt_sub, 10);
+	sync.registerCallback(frcCallback);
+  }
+	void frcCallback(const geometry_msgs::Wrench::ConstPtr& frc_l, const geometry_msgs::Wrench::ConstPtr& frc_r)
+	{
+		geometry_msgs::Twist vel;
+		
+		vel.linear.x = 0.0; vel.linear.y = 0.0; vel.linear.z = 0.0;
+		vel.angular.x = 0.0; vel.angular.y = 0.0; vel.angular.z = 0.0;
+		
+		if (frc_l->force.y > 1000 and frc_r->force.y > 1000){
+			vel.linear.x = 0.5*l_scale_;	
+			vel.angular.z = 0.3*a_scale_;
+		} else if (frc_l->force.y > 1000 and frc_r->force.y < 1000){
+			vel.linear.x = 0.4*l_scale_;
+			vel.angular.z = 0.3*a_scale_;		
+		} else if (frc_l->force.y < 1000 and frc_r->force.y > 1000){
+			vel.linear.x = 0.4*l_scale_;
+			vel.angular.z = -0.3*a_scale_;		
+		} else {
+			vel.linear.x = 0.0;
+			vel.angular.z = 0.0;		
+		}
+		
+		cmd_vel_pub_.publish(vel);
+	}
+
+int main(int argc, char** argv){
+	ros::init(argc, argv, "simple_controller");
+	SimpleController my_simple_controller;
+	
+	ros::Rate r(10.0);
+
+	while(ros::ok()){
+		ros::spinOnce();
+		r.sleep();
+	}
+}

@@ -1,0 +1,22 @@
+#Independent settings for the planner's costmap
+global_costmap:
+    publish_voxel_map: true
+    global_frame: map
+    robot_base_frame: base_link
+    update_frequency: 0.5
+    publish_frequency: 0.2 
+    static_map: true
+    width: 60
+    height: 60
+    resolution: 0.15
+    static_map:
+      map_topic: /map2
+
+    obstacle_layer:
+      observation_sources: laser_scan sonar_scan
+      laser_scan: {data_type: LaserScan, topic: /RosAria/S3Series_1_laserscan, sensor_frame: laser_frame, marking: true, clearing: true}
+      sonar_scan: {data_type: PointCloud2, topic: /RosAria/sonar_pointcloud2, sensor_frame: base_link, marking: true, clearing: true, observation_persistence: 10}
+
+    inflation_layer:
+      inflation_radius: 0.7  
+      cost_scaling_factor: 10

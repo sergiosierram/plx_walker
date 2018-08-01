@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package>
+  <name>plx_walker_navigation</name>
+  <version>1.0.10</version>
+  <description> Navigation launch and config files for PLX robot. </description>
+
+  <url type="website">http://ros.org/wiki/summit_xl_navigation</url>
+  <url type="repository">https://github.com/RobotnikAutomation/summit_xl_common.git</url>
+  <url type="bugtracker">https://github.com/RobotnikAutomation/summit_xl_common/issues</url>
+
+  <author email="rguzman@robotnik.es">Roberto Guzmán</author>  
+
+  <maintainer email="cvillar@robotnik.es">Carlos Villar</maintainer>
+ 
+  <license>BSD</license>
+  
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <run_depend>navigation</run_depend>
+  <run_depend>gmapping</run_depend>
+  <run_depend>amcl</run_depend>
+  <run_depend>move_base</run_depend>
+  <run_depend>teb_local_planner</run_depend>
+  
+</package>
+
+
+

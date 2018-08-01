@@ -1,0 +1,40 @@
+<!-- Launch file to interface Pioneer LX with Camera and Hokuyo laser  -->
+<launch>
+	<!--arguments-->
+	<arg name ="robot_id" default="pioneer"/>
+	<arg name ="robot_name" default="pioneer_lx"/>
+	<arg name ="laser_env_topic" default ="env_scan"/>
+	<arg name ="cam_env_topic" default ="env_cam"/>
+	<arg name="tf_prefix" default="$(arg robot_id)"/>
+	
+	<!--coordinates transform-->
+	
+	<node pkg ="tf" type ="static_transform_publisher" name ="camerabase_camera_broadcaster" args ="0.0 0 0.0 1.62 3.141592 1.57 /camerabase_frame /camera_frame 100" />
+	<node pkg ="tf" type ="static_transform_publisher" name ="laser_camera_broadcaster" args ="-0.15 -0.45 -0.20 0 0 0 /laser_frame /camerabase_frame 100" />
+	<!--node pkg ="tf" type ="static_transform_publisher" name ="laser_camera_broadcaster" args ="-0.10 0 0.22 1.62 3.141592 1.57 /laser_frame /camera_frame 100" /-->
+	<!--node pkg ="tf" type ="static_transform_publisher" name ="base_link_laser_broadcaster" args ="0.167 0 0.52 0 0 0 $(arg robot_id)/base_link $(arg robot_id)/laser_env 100" /-->
+	
+	<!--camera node-->
+	<node name="usb_cam" pkg="usb_cam" type="usb_cam_node" output="screen" >
+	  <param name="camera_frame_id" type="string" value="/camera_frame" />
+	  <param name="video_device" value="/dev/lifecam"/>
+	  <param name="image_width" value="1920" />
+	  <param name="image_height" value="1080" />
+	  <param name="pixel_format" value="yuyv" />
+	  <param name="io_method" value="mmap"/>
+	</node>
+
+	<param name="use_sim_time" value="false"/>
+	<rosparam command="load" file="$(find hdetect)/yaml/laser_filter.yaml"/>
+
+	<node pkg="hdetect" type="recognizeRT" name="recognizeRT" output="screen" cwd="node"
+		args="/usb_cam/image_raw /RosAria/S3Series_1_laserscan">
+		<param name="/camera_yaml" value="$(find hdetect)/yaml/head_camera.yaml"/>
+		<param name="/camera_name" value="lifecam"/>
+		<param name="/boost_xml" value="$(find hdetect)/data/trained_boost.xml"/>
+		<param name="odom_topic" value="/RosAria/pose"/>
+		<param name="amcl_topic" value="/amcl_pose"/>
+		<param name="use_amcl" value="false"/>
+		<rosparam command="load" file="$(find hdetect)/yaml/detector2.yaml"/>
+	</node>
+ </launch>
