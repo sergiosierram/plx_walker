@@ -1,0 +1,50 @@
+<!--Launch file for minimal requirements to interface the Pioneer LX -->
+<launch>
+    <arg name ="robot_id" default="pioneer"/>
+    <arg name ="laser_legs_topic" default ="leg_scan"/>
+    <arg name ="cam_env_topic" default ="env_cam"/>
+    <arg name="tf_prefix" default="$(arg robot_id)"/>
+    <arg name="robot_name" default="plxbot"/>
+
+    <node name="RosAria"	pkg="rosaria"	type="RosAria"	output="screen">
+      <param name="publish_aria_lasers"	type="bool"	value="true"/>
+      <param name="odom_frame" type="string" value="odom"/>
+      <param name="base_link_frame" type="string" value="base_link"/>
+      <param name="laser_frame" type="string" value="laser_frame"/>
+      <param name="sonar_frame" type="string" value="base_link"/>
+    </node>
+    
+    <!--coordinates transform-->
+  	<node pkg ="tf" type ="static_transform_publisher" name ="laser_camera_broadcaster" args ="0 0 0.22 4.75 3.14 1.57 laser_frame cam_frame 100" />
+  	<node pkg ="tf" type ="static_transform_publisher" name ="leg_laser_broadcaster" args ="-0.35 0 0.40 3.14 0 0 base_link laser_legs 100" />
+
+    <!--camera node-->
+    <node name="usb_cam" pkg="usb_cam" type="usb_cam_node" output="screen" >
+      <param name="camera_frame_id" type="string" value="cam_frame" />
+      <param name="video_device" value="/dev/lifecam"/>
+      <param name="image_width" value="640" />
+      <param name="image_height" value="480" />
+      <param name="pixel_format" value="yuyv" />
+      <param name="io_method" value="mmap"/>
+      <remap from="usb_cam/image_raw" to="recognizeRT/usb_cam/image_raw"/>
+    </node>
+
+    <!--hokuyo node-->
+	<node name="hokuyo" pkg="hokuyo_node" type="hokuyo_node" respawn="false" output="screen">
+	  <param name="frame_id" type ="string" value ="laser_legs"/>
+	  <param name="port" type="string" value="/dev/hokuyo"/>
+	  <param name="intensity" type="bool" value="false"/>
+	  <remap from = "scan" to ="hokuyo/$(arg laser_legs_topic)"/>
+	</node>
+
+    <node name="security" pkg="plx_walker_security" type="security.py" output="screen"/>
+    <node name="switch" pkg="plx_walker_security" type="switch.py" output="screen"/>
+
+    <arg name="urdf" default="$(find amr_robots_description)/urdf/pioneer-lx.urdf" />
+    <param name="robot_description" textfile="$(arg urdf)" />
+
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+
+
+</launch>

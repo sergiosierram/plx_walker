@@ -1,26 +1,10 @@
 <!--Launch file for minimal requirements to interface the Pioneer LX -->
 <launch>
-    <!--arguments-->
-    <arg name="robot_name" default="plxbot"/>
     <arg name ="robot_id" default="pioneer"/>
     <arg name ="laser_env_topic" default ="env_scan"/>
     <arg name ="cam_env_topic" default ="env_cam"/>
     <arg name="tf_prefix" default="$(arg robot_id)"/>
-
-    <!--coordinates transform-->
-    <node pkg ="tf" type ="static_transform_publisher" name ="laser_camera_broadcaster" args ="0 0 0.05 1.61 3.14 1.57 $(arg robot_id)/laser_env $(arg robot_id)/cam_env 100" />
-    <node pkg ="tf" type ="static_transform_publisher" name ="base_link_laser_broadcaster" args ="0.167 0 0.52 0 0 0 $(arg robot_id)/base_link $(arg robot_id)/laser_env 100" />
-
-    <!--camera node-->
-  	<node name="usb_cam" pkg="usb_cam" type="usb_cam_node" output="screen" >
-  	  <param name="camera_frame_id" type="string" value="$(arg robot_id)/cam_env" />
-  	  <param name="video_device" value="/dev/lifecam"/>
-  	  <param name="image_width" value="640" />
-  	  <param name="image_height" value="480" />
-  	  <param name="pixel_format" value="yuyv" />
-  	  <param name="io_method" value="mmap"/>
-  	  <remap from="usb_cam/image_raw" to="headlessRT/usb_cam/image_raw"/>
-  	</node>
+    <arg name="robot_name" default="plxbot"/>
 
     <node name="RosAria"	pkg="rosaria"	type="RosAria"	output="screen">
       <param name="publish_aria_lasers"	type="bool"	value="true"/>
@@ -29,8 +13,29 @@
       <param name="laser_frame" type="string" value="laser_frame"/>
       <param name="sonar_frame" type="string" value="base_link"/>
     </node>
+    <!--node pkg="tf" type="static_transform_publisher" name="sick_camera_broadcaster"
+      	  args="0.05 0 0.22 1.62 3.141592 1.57 laser_frame cam_frame 100" /-->
+    <!--coordinates transform-->
+  	<node pkg ="tf" type ="static_transform_publisher" name ="laser_camera_broadcaster" args ="0 0 0.22 1.61 3.14 1.57 laser_frame cam_frame 100" />
+    <!--camera node-->
+    <node name="usb_cam" pkg="usb_cam" type="usb_cam_node" output="screen" >
+      <param name="camera_frame_id" type="string" value="cam_frame" />
+      <param name="video_device" value="/dev/lifecam"/>
+      <param name="image_width" value="320" />
+      <param name="image_height" value="240" />
+      <param name="pixel_format" value="yuyv" />
+      <param name="io_method" value="mmap"/>
+      <!--remap from="usb_cam/image_raw" to="recognizeRT/usb_cam/image_raw"/-->
+    </node>
 
     <node name="security" pkg="plx_walker_security" type="security.py" output="screen"/>
     <node name="switch" pkg="plx_walker_security" type="switch.py" output="screen"/>
+
+    <arg name="urdf" default="$(find amr_robots_description)/urdf/pioneer-lx.urdf" />
+    <param name="robot_description" textfile="$(arg urdf)" />
+
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+
 
 </launch>

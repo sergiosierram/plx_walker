@@ -10,7 +10,7 @@
 
 	<!--coordinates transform-->
 	<node pkg ="tf" type ="static_transform_publisher" name ="laser_camera_broadcaster" args ="0 0 0.05 1.61 3.14 1.57 $(arg robot_id)/laser_env $(arg robot_id)/cam_env 100" />
-	<node pkg ="tf" type ="static_transform_publisher" name ="base_link_laser_broadcaster" args ="0.167 0 0.52 0 0 0 $(arg robot_id)/base_link $(arg robot_id)/laser_env 100" />
+	<!--node pkg ="tf" type ="static_transform_publisher" name ="base_link_laser_broadcaster" args ="0.167 0 0.52 0 0 0 $(arg robot_id)/base_link $(arg robot_id)/laser_env 100" /-->
 
 	<!--camera node-->
 	<node name="usb_cam" pkg="usb_cam" type="usb_cam_node" output="screen" >
@@ -20,17 +20,17 @@
 	  <param name="image_height" value="480" />
 	  <param name="pixel_format" value="yuyv" />
 	  <param name="io_method" value="mmap"/>
-	  <remap from="usb_cam/image_raw" to="headlessRT/usb_cam/image_raw"/>
+	  <!--remap from="usb_cam/image_raw" to="recognizeRT/usb_cam/image_raw"/-->
 	</node>
 
 	<!--human detection node-->
-	<node pkg="hdetect" type="headlessRT" name="headlessRT" output="screen" cwd="node"
-		args="pioneer_lx/usb_cam/image_raw pioneer_lx/hokuyo/env_scan">
+	<node pkg="hdetect" type="recognizeRT" name="recognizeRT" output="screen" cwd="node"
+		args="/usb_cam/image_raw /RosAria/S3Series_1_laserscan">
 		<param name="/camera_yaml" value="$(find hdetect)/yaml/head_camera.yaml"/>
 		<param name="/camera_name" value="lifecam"/>
 		<param name="/boost_xml" value="$(find hdetect)/data/trained_boost.xml"/>
-		<remap from="headlessRT/pioneer_lx/usb_cam/image_raw" to="pioneer_lx/usb_cam/image_raw"/>
-		<remap from="headlessRT/pioneer_lx/hokuyo/env_scan" to="pioneer_lx/hokuyo/env_scan"/>
+		<!--remap from="headlessRT/pioneer_lx/usb_cam/image_raw" to="pioneer_lx/usb_cam/image_raw"/-->
+		<!--remap from="headlessRT/pioneer_lx/hokuyo/env_scan" to="pioneer_lx/hokuyo/env_scan"/-->
 	<rosparam command="load" file="$(find hdetect)/yaml/detector.yaml"/>
 	</node>
 </launch>

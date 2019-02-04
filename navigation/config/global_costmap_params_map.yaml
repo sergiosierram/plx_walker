@@ -6,8 +6,8 @@ global_costmap:
     update_frequency: 0.5
     publish_frequency: 0.2 
     static_map: true
-    width: 60
-    height: 60
+    width: 100
+    height: 100
     resolution: 0.15
     static_map:
       map_topic: /map2
