@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<launch>
+
+ <!-- joy node -->
+  <node pkg="joy" type="joy_node" name="ps3_joy" output="screen" respawn="true">
+    <param name="dev" type="string" value="/dev/input/js0" />
+    <param name="deadzone" value="0.12" />
+    <param name="autorepeat_rate" value="10.0" type="double" />
+  </node>
+  
+  <!-- Parameters -->
+  <param name="cmd_topic_vel" value="/aux_cmd_vel" type="string"/>
+  <rosparam command="load" file="$(find plx_walker_spider_teleop)/config/ps3.yaml" />
+  <node name="spider_pad" pkg="plx_walker_spider_teleop" type="spider_pad_node" output="screen"/>
+  
+</launch>
+

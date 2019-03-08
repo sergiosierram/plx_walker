@@ -16,8 +16,9 @@
     <!--node pkg="tf" type="static_transform_publisher" name="sick_camera_broadcaster"
       	  args="0.05 0 0.22 1.62 3.141592 1.57 laser_frame cam_frame 100" /-->
     <!--coordinates transform-->
-  	<node pkg ="tf" type ="static_transform_publisher" name ="laser_camera_broadcaster" args ="0 0 0.22 1.61 3.14 1.57 laser_frame cam_frame 100" />
-		<node pkg ="tf" type ="static_transform_publisher" name ="leg_laser_broadcaster" args ="-0.35 0 0.40 3.14 0 0 base_link laser_legs 100" />
+  	<node pkg ="tf" type ="static_transform_publisher" name ="laser_camera_broadcaster" args ="-.42 0 0.60 -1.61 3.14 2.35 laser_frame cam_frame 100" />
+  	<!-- node pkg ="tf" type ="static_transform_publisher" name ="laser_camera_broadcaster" args ="0 0 0.22 1.61 3.14 1.57 laser_frame cam_frame 100" -->
+	<node pkg ="tf" type ="static_transform_publisher" name ="leg_laser_broadcaster" args ="-0.35 0 0.40 3.14 0 0 base_link laser_legs 100" />
     
 		<!--camera node-->
     <node name="usb_cam" pkg="usb_cam" type="usb_cam_node" output="screen" >

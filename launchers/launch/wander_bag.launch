@@ -1,0 +1,27 @@
+<launch>
+	<node pkg="rosbag" type="record" name="record" output="screen"
+		args="-o /mnt/disk/Bags/Wander/
+			/RosAria/cmd_vel
+			/RosAria/parameter_descriptions
+			/RosAria/parameter_updates
+			/RosAria/S3Series_1_laserscan
+			/RosAria/pose
+			/aux_cmd_vel
+			/hokuyo/parameter_descriptions
+             		/hokuyo/parameter_updates                
+             		/insecure_cmd_vel                               
+             		/insecure_mode
+			/log_times
+			/rosout
+			/rosout_agg
+			/scan                             
+             		/tf
+			/tf_static
+             		/usb_cam/camera_info               
+             		/usb_cam/image_raw                      
+             		/usb_cam/image_raw/compressed
+			/joint_states
+	"
+	required="true">
+	</node>
+</launch>

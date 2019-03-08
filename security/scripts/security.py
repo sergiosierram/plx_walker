@@ -113,19 +113,19 @@ class PlxSecurity():
 		v, slw, wdth = self.cmd_vel_x, 0.6, 1.5
 		if v <= 0.4:
 			slw = 0.8
-			wdth = 1.2
+			wdth = 1.1
 		elif v <= 0.5:
 			slw = 1.0
-			wdth = 1.4
+			wdth = 1.2
 		elif v <= 0.6:
 			slw = 1.2
-			wdth = 1.5
+			wdth = 1.3
 		elif v <= 0.8:
 			slw = 1.4
-			wdth = 2.0
+			wdth = 1.5
 		else:
 			slw = 2.0
-			wdth = 3.0
+			wdth = 1.5
 		return slw, wdth
 
 	def main_security(self):
