@@ -23,7 +23,7 @@ TebLocalPlannerROS:
 
   # Robot
           
-  max_vel_x: 0.6
+  max_vel_x: 0.5
   max_vel_x_backwards: 0.1
   max_vel_theta: 0.3
   max_vel_y: 0 # not used, is differential
@@ -47,7 +47,7 @@ TebLocalPlannerROS:
  
   # GoalTolerance
      
-  xy_goal_tolerance: 0.2
+  xy_goal_tolerance: 0.5
   yaw_goal_tolerance: 0.3
   free_goal_vel: false  #False
      
