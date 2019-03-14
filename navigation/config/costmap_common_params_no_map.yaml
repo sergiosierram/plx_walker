@@ -1,6 +1,7 @@
 obstacle_range: 14
 raytrace_range: 14
 
+transform_tolerance: 10
 footprint: [[0.4, -0.30], [0.4, 0.3], [-0.4,0.3], [-0.4, -0.3]]
 
 plugins:
