@@ -6,9 +6,9 @@
 <!-- Run the map server -->
 <!-- node name="map_server" pkg="map_server" type="map_server" args="$(find summit_xl_navigation)/maps/rbk_warehouse/rbk_warehouse.yaml"/ -->
 <!-- Map used for localization -->
-<node name="map_server" pkg="map_server" type="map_server" args="$(find plx_walker_navigation)/maps/2019/map.yaml"/>
+<node name="map_server" pkg="map_server" type="map_server" args="$(find plx_walker_navigation)/maps/maps_ricardo/map.yaml"/>
 <!-- Map edited -->
-<node name="map_server2" pkg="map_server" type="map_server" args="$(find plx_walker_navigation)/maps/2019/map.yaml">
+<node name="map_server2" pkg="map_server" type="map_server" args="$(find plx_walker_navigation)/maps/maps_ricardo/map_ed.yaml">
   <remap from="/map" to="/map2"/>
 </node>
 
