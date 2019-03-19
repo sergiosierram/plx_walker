@@ -48,7 +48,7 @@
   <param name="base_frame_id" value="base_link"/>
   <param name="global_frame_id" value="map"/>
   <param name="resample_interval" value="1"/>
-  <param name="transform_tolerance" value="0.1"/>
+  <param name="transform_tolerance" value="5"/>
   <param name="recovery_alpha_slow" value="0.0"/>
   <param name="recovery_alpha_fast" value="0.0"/>
   <param name="initial_pose_x" value ="2.08"/>
