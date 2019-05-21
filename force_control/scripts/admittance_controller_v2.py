@@ -15,12 +15,12 @@ class AdmittanceController(object):
 		self.frc_topic = self.rospy.get_param("frc_topic","/frc")
 		self.acontroller_rate = self.rospy.get_param("acontroller_rate",30)
 		self.controller_params = {
-					"m": self.rospy.get_param("mass",10),
-					"b_l": self.rospy.get_param("lineal_damping_c",100),
-					"k_l": self.rospy.get_param("lineal_stiffness_c",10),
-					"j": self.rospy.get_param("inertia",100),
-					"b_a": self.rospy.get_param("angular_damping_c",100),
-					"k_a": self.rospy.get_param("angular_stiffness_c",10),
+					"m": self.rospy.get_param("mass",4),
+					"b_l": self.rospy.get_param("lineal_damping_c",10),
+					"k_l": self.rospy.get_param("lineal_stiffness_c",0.3),
+					"j": self.rospy.get_param("inertia", 1),
+					"b_a": self.rospy.get_param("angular_damping_c", 15),
+					"k_a": self.rospy.get_param("angular_stiffness_c",0.7),
 					"Ts": self.rospy.get_param("Ts",1.0/self.acontroller_rate)}
 		'''Subscribers'''
 		self.sub_frc = self.rospy.Subscriber(self.frc_topic,Wrench,self.callback_frc)
@@ -49,7 +49,7 @@ class AdmittanceController(object):
 		linear = sg.dlsim(self.systems["linear"],self.signal_in["frc"])
 		angular = sg.dlsim(self.systems["angular"],self.signal_in["trq"])
 		#print("v_lineal",linear[1][-1],'v_angular',angular[1][-1])
-		return 2*linear[1][-1],2*angular[1][-1]
+		return linear[1][-1],1.5*angular[1][-1]
 
 	def callback_frc(self,msg):
 		self.frc = msg.force.y
@@ -76,6 +76,8 @@ class AdmittanceController(object):
 				self.signal_in["trq"].pop(0)
 				self.signal_in["trq"].append(self.trq)
 				self.vel.linear.x,self.vel.angular.z = self.get_response()
+				if self.vel.linear.x < 0.1:
+					self.vel.linear.x = 0				
 				self.pub_aux_cmd_vel.publish(self.vel)
 				self.change = False
 				#print(2)

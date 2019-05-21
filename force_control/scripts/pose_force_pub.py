@@ -13,10 +13,10 @@ class ForcePosePub(object):
 		self.pose_topic = self.rospy.get_param("pose_topic","/pose_force")
 		self.odom_topic = self.rospy.get_param("odom_topic","/RosAria/pose")
 		self.change1 = 	self.change2 = False
-        	'''Subscribers'''
+		'''Subscribers'''
 		self.sub_frc = self.rospy.Subscriber(self.frc_topic, Wrench, self.callback_frc)
-       		self.sub_odom = self.rospy.Subscriber(self.odom_topic, Odometry, self.callback_odom)
-        	#self.sub_trq = self.rospy.Subscriber(self.trq_topic, Wrench,self.callback_trq)
+		self.sub_odom = self.rospy.Subscriber(self.odom_topic, Odometry, self.callback_odom)
+        #self.sub_trq = self.rospy.Subscriber(self.trq_topic, Wrench,self.callback_trq)
 		'''Publishers'''
 		self.pub_pose = self.rospy.Publisher(self.pose_topic, Odometry, queue_size = 10)
 		'''Node Configuration'''
@@ -36,7 +36,7 @@ class ForcePosePub(object):
 	def callback_frc(self,msg):
 		self.frc = msg.force.y
 		self.trq = msg.torque.y
-		self.yaw = (90*self.trq/70)*np.pi/180
+		self.yaw = (90*self.trq/15)*np.pi/180
 		print(self.yaw*180/np.pi)
 		if self.change2:
 			angle = (np.arccos(self.qw)*2)+np.sign(self.qz)*self.yaw
