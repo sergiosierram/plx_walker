@@ -11,7 +11,7 @@ class AdmittanceController(object):
 	def __init__(self):
 		'''Parameters Inicialization '''
 		self.rospy = rospy
-		self.aux_cmd_vel_topic = self.rospy.get_param("aux_cmd_vel_topic", "/aux_cmd_vel")
+		self.aux_cmd_vel_topic = self.rospy.get_param("aux_cmd_vel_topic", "/usr_cmd_vel")
 		self.frc_topic = self.rospy.get_param("frc_topic","/frc")
 		self.acontroller_rate = self.rospy.get_param("acontroller_rate",30)
 		self.controller_params = {
@@ -77,7 +77,7 @@ class AdmittanceController(object):
 				self.signal_in["trq"].append(self.trq)
 				self.vel.linear.x,self.vel.angular.z = self.get_response()
 				if self.vel.linear.x < 0.1:
-					self.vel.linear.x = 0				
+					self.vel.linear.x = 0
 				self.pub_aux_cmd_vel.publish(self.vel)
 				self.change = False
 				#print(2)

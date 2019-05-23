@@ -22,6 +22,7 @@ class SharedNav(object):
 		self.plan_poses_topic = self.rospy.get_param("plan_poses_topic","/move_base/TebLocalPlannerROS/local_plan")
 		self.nav_goal_topic = self.rospy.get_param("nav_goal_topic","/move_base_simple/goal")
 		self.tf_topic = self.rospy.get_param("tf_topic","/tf")
+		self.shared_mode_topic = self.rospy.get_param("shared_mode_topic", "/shared_mode")
 		self.advertise_nav_topic = self.rospy.get_param("advertise_nav_topic","shared_nav_topic")
 		self.markers_topic = self.rospy.get_param("/markers_topic", "/markers")
 		self.tf_listener = tf.TransformListener()
@@ -31,6 +32,7 @@ class SharedNav(object):
 		self.pose_walker = Odometry()
 		self.path = Path()
 		self.goal = PoseStamped()
+		self.shared_mode = Bool()
 		self.shared_nav_mode = False
 		self.win_width = 0.8
 		self.max_angle = 90*np.pi/180
@@ -45,6 +47,7 @@ class SharedNav(object):
 		'''Publishers'''
 		self.pub_advertise_nav = self.rospy.Publisher(self.advertise_nav_topic, Bool, queue_size = 10)
 		self.pub_markers = self.rospy.Publisher(self.markers_topic, MarkerArray, queue_size=10)
+		self.pub_shared_mode = self.rospy.Publisher(self.shared_mode_topic, Bool, queue_size=10)
 		'''Node Configuration'''
 		self.rospy.init_node("SharedNavPub", anonymous = True)
 		self.rate = self.rospy.Rate(20)
@@ -199,9 +202,12 @@ class SharedNav(object):
 				print("thetaWalker",thetaWalker,"thetaNav",thetaNav,"thetaWindow",thetaWindow, "thetaUser",thetaUser, "thetaDiff", thetaDiff)
 				#print((thetaDiff-thetaA), " <= ", thetaUser, " <= ", (thetaDiff+thetaB))
 				if (thetaDiff-thetaA) <= thetaUser <= (thetaDiff+thetaB):
+					self.shared_mode.data = True
 					print("OK")
 				else:
+					self.shared_mode.data = True
 					print("not OK")
+				self.pub_shared_mode.publish(self.shared_mode)
 				self.change1 = self.cahnge2 = self.change3 = False
 			self.rate.sleep()
 
