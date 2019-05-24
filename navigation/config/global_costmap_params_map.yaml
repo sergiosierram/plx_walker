@@ -3,8 +3,8 @@ global_costmap:
     publish_voxel_map: true
     global_frame: map
     robot_base_frame: base_link
-    update_frequency: 10 #20 # 1
-    publish_frequency: 4 #10 # 0.4 
+    update_frequency: 20 #20 # 1
+    publish_frequency: 10 #10 # 0.4 
     static_map: true
     width: 100
     height: 100
