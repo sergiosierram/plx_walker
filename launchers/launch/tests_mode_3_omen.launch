@@ -24,12 +24,6 @@
       <rosparam file="$(find plx_walker_navigation)/config/global_planner_params.yaml" command="load" />
     </node>
 
-	<!-- Path generator -->
-	<node name="gen_from_csv" pkg="path_generator" type="gen_from_csv.py" output="screen">
-		<rosparam file="$(find path_generator)/config/goals_from_csv_journal.yaml" command="load"/>
-		<param name="csv_file" type="string" value="$(find path_generator)/config/paths/path_points_journal.csv"/>
-	</node>
-
 	<!--admittance_controller node-->
     <node name="admittance" pkg="plx_walker_force_control" type="admittance_controller_v2.py" output="screen"/>
 
