@@ -5,7 +5,4 @@
     <!--admittance_controller node-->
     <node name="admittance" pkg="plx_walker_force_control" type="admittance_controller_v2.py" output="screen"/>
 
-    <node name="rosbag_record" pkg="rosbag" type="record"
-      args="record -a -o mode1_omen_"/>
-
 </launch>

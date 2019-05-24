@@ -30,7 +30,4 @@
 		<param name="csv_file" type="string" value="$(find path_generator)/config/paths/path_points_journal.csv"/>
 	</node>
 
-    <node name="rosbag_record" pkg="rosbag" type="record"
-      args="record -a -o mode2_omen_"/>
-
 </launch>
