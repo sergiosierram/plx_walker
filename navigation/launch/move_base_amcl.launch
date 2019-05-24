@@ -10,7 +10,7 @@
   <!-- Run move_base -->
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
     <!--remap from="/cmd_vel" to="/RosAria/cmd_vel"/-->
-    <remap from="/cmd_vel" to="/aux_cmd_vel"/>
+    <remap from="/cmd_vel" to="/nav_cmd_vel"/>
     <rosparam file="$(find plx_walker_navigation)/config/move_base_params.yaml" command="load" />
     <rosparam file="$(find plx_walker_navigation)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
     <rosparam file="$(find plx_walker_navigation)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />

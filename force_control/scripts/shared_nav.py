@@ -50,7 +50,7 @@ class SharedNav(object):
 		self.pub_shared_mode = self.rospy.Publisher(self.shared_mode_topic, Bool, queue_size=10)
 		'''Node Configuration'''
 		self.rospy.init_node("SharedNavPub", anonymous = True)
-		self.rate = self.rospy.Rate(20)
+		self.rate = self.rospy.Rate(30)
 		self.main()
 
 	def callback_pose_user(self,msg):
@@ -161,7 +161,7 @@ class SharedNav(object):
 		new_pos = rotation.dot(pos) + translation
 		marker.pose.position.x = new_pos[0]
 		marker.pose.position.y = new_pos[1]
-		quat = qfe(0, 0, thetaDiff)
+		quat = qfe(0, 0, thetaWalker)
 		marker.pose.orientation.x = quat[0]
 		marker.pose.orientation.y = quat[1]
 		marker.pose.orientation.z = quat[2]
@@ -191,7 +191,7 @@ class SharedNav(object):
 				thetaWalker = np.mod(self.thetaWalker + self.rotMapOdom, 2*np.pi)
 				thetaUser = np.mod(self.thetaUser + self.rotMapOdom, 2*np.pi)
 				thetaNav = np.mod(self.thetaNav + self.rotMapOdom, 2*np.pi)
-				thetaDiff = np.arctan((nextPoseY-userY)/(nextPoseX-userX)) + self.rotMapOdom
+				thetaDiff = np.mod(np.arctan2((nextPoseY-userY),(nextPoseX-userX)) + self.rotMapOdom, 2*np.pi)
 				La = (((-self.win_width)/(2.0*self.max_angle))*(thetaNav - thetaWalker)) + (self.win_width/2.0)
 				Lb = (((self.win_width)/(2.0*self.max_angle))*(thetaNav - thetaWalker)) + (self.win_width/2.0)
 				thetaA = np.arctan(La/distanceToNextPose)
@@ -205,10 +205,12 @@ class SharedNav(object):
 					self.shared_mode.data = True
 					print("OK")
 				else:
-					self.shared_mode.data = True
+					self.shared_mode.data = False
 					print("not OK")
-				self.pub_shared_mode.publish(self.shared_mode)
-				self.change1 = self.cahnge2 = self.change3 = False
+				self.change1 = self.cahnge2 = False
+			else:
+				self.shared_mode.data = False
+			self.pub_shared_mode.publish(self.shared_mode)
 			self.rate.sleep()
 
 

@@ -17,7 +17,7 @@ class FrcAcquirer():
 		self.frc_right = Wrench()
 		self.frc = Wrench()
 		self.exitFlag = False
-		self.fs = 15 	#Max 30. Hz
+		self.fs = 30 	#Max 30. Hz
 		self.tCalib = 1
 		self.calibrate = True
 		self.daq = DAQ_v2()
@@ -133,7 +133,6 @@ class FrcAcquirer():
 
 if __name__ == '__main__':
 	try:
-		print("Perra")
 		frc = FrcAcquirer()
 		#thread1 = Thread(target = frc.wait_for_exit)
 		#thread1.start()

@@ -21,7 +21,7 @@ class ForcePosePub(object):
 		self.pub_pose = self.rospy.Publisher(self.pose_topic, Odometry, queue_size = 10)
 		'''Node Configuration'''
 		self.rospy.init_node("ForcePosePub", anonymous = True)
-		self.rate = self.rospy.Rate(20)
+		self.rate = self.rospy.Rate(30)
 		self.frc = 0
 		self.trq = 0
 		self.pose = Odometry()

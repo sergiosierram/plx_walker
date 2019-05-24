@@ -40,7 +40,7 @@ class AdmittanceController(object):
 		[anum_d, aden_d] = sg.bilinear(anum, aden, self.acontroller_rate)
 		self.systems = {	"linear": sg.TransferFunction(lnum_d,lden_d,dt = self.controller_params["Ts"]),
 							"angular": sg.TransferFunction(anum_d,aden_d,dt = self.controller_params["Ts"])}
-		self.change = False
+		self.change = self.enabled = False
 		self.signal_in = {"frc": [],
 					  	  "trq": [],}
 		self.main_controller()
@@ -55,6 +55,9 @@ class AdmittanceController(object):
 		self.frc = msg.force.y
 		self.trq = msg.torque.y
 		self.change = True
+		if self.frc >= 0.35:
+			self.enabled = True
+		return
 
 	def main_controller(self):
 		min_len = int(.5/self.controller_params["Ts"])
@@ -78,7 +81,9 @@ class AdmittanceController(object):
 				self.vel.linear.x,self.vel.angular.z = self.get_response()
 				if self.vel.linear.x < 0.1:
 					self.vel.linear.x = 0
-				self.pub_aux_cmd_vel.publish(self.vel)
+				if self.enabled:
+					self.pub_aux_cmd_vel.publish(self.vel)
+					self.enabled = False
 				self.change = False
 				#print(2)
 			self.rate.sleep()
