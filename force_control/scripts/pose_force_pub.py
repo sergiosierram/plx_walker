@@ -37,7 +37,6 @@ class ForcePosePub(object):
 		self.frc = msg.force.y
 		self.trq = msg.torque.y
 		self.yaw = (90*self.trq/15)*np.pi/180
-		print(self.yaw*180/np.pi)
 		if self.change2:
 			angle = (np.arccos(self.qw)*2)+np.sign(self.qz)*self.yaw
 			self.qw_user = np.cos(angle/2)

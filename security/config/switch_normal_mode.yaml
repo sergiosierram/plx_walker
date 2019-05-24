@@ -5,5 +5,5 @@ nav_cmd_vel_topic: /nav_cmd_vel
 insecure_vel_topic: /insecure_cmd_vel
 insecure_mode_topic: /insecure_mode
 shared_mode_topic: /shared_mode
-shared_mode: False
+shared_mode: false
 switch_rate: 20

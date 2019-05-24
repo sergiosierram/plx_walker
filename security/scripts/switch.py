@@ -7,16 +7,17 @@ from sys import stdin
 class Switch():
 	def __init__(self):
 		self.rospy = rospy
+		self.rospy.init_node('VelocitySwitch', anonymous = True)
 		'''Parameters'''
-		self.final_vel_topic = self.rospy.get_param("final_vel_topic","/RosAria/cmd_vel")
-		self.aux_vel_topic = self.rospy.get_param("aux_vel_topic","/aux_cmd_vel")
-		self.usr_vel_topic = self.rospy.get_param("usr_cmd_vel_topic", "/usr_cmd_vel")
-		self.nav_vel_topic = self.rospy.get_param("nav_cmd_vel_topic", "/nav_cmd_vel")
-		self.insecure_vel_topic = self.rospy.get_param("insecure_vel_topic","/insecure_cmd_vel")
-		self.insecure_mode_topic = self.rospy.get_param("insecure_mode_topic","/insecure_mode")
-		self.shared_mode_topic = self.rospy.get_param("shared_mode_topic", "/shared_mode")
-		self.shared_mode = self.rospy.get_param("shared_mode", False)
-		self.switch_rate = self.rospy.get_param("switch_rate", 20)
+		self.final_vel_topic = self.rospy.get_param("~final_vel_topic","/RosAria/cmd_vel")
+		self.aux_vel_topic = self.rospy.get_param("~aux_vel_topic","/aux_cmd_vel")
+		self.usr_vel_topic = self.rospy.get_param("~usr_cmd_vel_topic", "/usr_cmd_vel")
+		self.nav_vel_topic = self.rospy.get_param("~nav_cmd_vel_topic", "/nav_cmd_vel")
+		self.insecure_vel_topic = self.rospy.get_param("~insecure_vel_topic","/insecure_cmd_vel")
+		self.insecure_mode_topic = self.rospy.get_param("~insecure_mode_topic","/insecure_mode")
+		self.shared_mode_topic = self.rospy.get_param("~shared_mode_topic", "/shared_mode")
+		self.shared_mode = self.rospy.get_param("~shared_mode", False)
+		self.switch_rate = self.rospy.get_param("~switch_rate", 20)
 		'''Subscribers'''
 		self.sub_aux_vel = self.rospy.Subscriber(self.aux_vel_topic, Twist, self.callback_aux_vel)
 		self.sub_usr_vel = self.rospy.Subscriber(self.usr_vel_topic, Twist, self.callback_usr_vel)
@@ -27,7 +28,6 @@ class Switch():
 		'''Publisher'''
 		self.pub_final_vel = self.rospy.Publisher(self.final_vel_topic, Twist, queue_size = 10)
 		'''Node Configuration'''
-		self.rospy.init_node('VelocitySwitch', anonymous = True)
 		self.rate = self.rospy.Rate(self.switch_rate)
 		self.aux_vel = self.usr_vel = self.insecure_vel = Twist()
 		self.insecure_mode = self.enabled = False
@@ -75,6 +75,9 @@ class Switch():
 		return
 
 	def main_switch(self):
+		print("-----------------------------------------------------------")
+		print(self.shared_mode)
+		print("-----------------------------------------------------------")
 		while not self.rospy.is_shutdown():
 			ref_vel = Twist()
 			if self.change_aux_vel:
