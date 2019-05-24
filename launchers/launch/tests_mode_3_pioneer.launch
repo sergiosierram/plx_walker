@@ -30,6 +30,6 @@
     </node>
 
     <!--frc_acquirer node-->
-    <node name="frc_acquirer" pkg="plx_walker_force_control" type="frc_acquirer_daq_v2.py" output="screen">
+    <node name="frc_acquirer" pkg="plx_walker_force_control" type="frc_acquirer_daq_v2.py" output="screen"/>
 
 </launch>

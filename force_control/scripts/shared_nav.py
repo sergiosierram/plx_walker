@@ -177,7 +177,7 @@ class SharedNav(object):
 		return
 
 	def main(self):
-		rotMapOdom = int(input("Ingrese rotacion entre map y odom"))*np.pi/180
+		#rotMapOdom = int(input("Ingrese rotacion entre map y odom"))*np.pi/180
 		while not(self.rospy.is_shutdown()):
 			if self.change1 and self.change2 and self.change3 and self.change4 and self.change5:
 				nextPoseX, nextPoseY  = self.nextPose.position.x, self.nextPose.position.y

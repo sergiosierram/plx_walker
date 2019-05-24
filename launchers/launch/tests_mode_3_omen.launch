@@ -27,4 +27,10 @@
 	<!--admittance_controller node-->
     <node name="admittance" pkg="plx_walker_force_control" type="admittance_controller_v2.py" output="screen"/>
 
+	<!--pose force node-->	
+    <node name="pose_force_pub" pkg="plx_walker_force_control" type="pose_force_pub.py" output="screen"/>
+
+	<!--shared nav node-->	
+    <node name="pose_force_pub" pkg="plx_walker_force_control" type="shared_nav.py" output="screen"/>
+
 </launch>
