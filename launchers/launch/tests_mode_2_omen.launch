@@ -2,33 +2,6 @@
 <launch>
     <arg name="robot_name" default="plxbot"/>
 
-    <node name="RosAria"	pkg="rosaria"	type="RosAria"	output="screen">
-      <param name="publish_aria_lasers"	type="bool"	value="true"/>
-      <param name="odom_frame" type="string" value="odom"/>
-      <param name="base_link_frame" type="string" value="base_link"/>
-      <param name="laser_frame" type="string" value="laser_frame"/>
-      <param name="sonar_frame" type="string" value="base_link"/>
-    </node>
-
-    <node name="security" pkg="plx_walker_security" type="security.py" output="screen"/>
-
-    <node name="switch" pkg="plx_walker_security" type="switch.py" output="screen">
-      <rosparam file="$(find plx_walker_security)/config/switch_normal_mode.yaml"/>
-    </node>
-
-    <arg name="urdf" default="$(find amr_robots_description)/urdf/pioneer-lx.urdf" />
-    <param name="robot_description" textfile="$(arg urdf)" />
-
-    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
-
-    <!--hokuyo node-->
-    <node name="hokuyo" pkg="hokuyo_node" type="hokuyo_node" respawn="false" output="screen">
-    	<param name="frame_id" type ="string" value ="usr_laser"/>
-    	<param name="port" type="string" value="/dev/hokuyo"/>
-    	<param name="intensity" type="bool" value="false"/>
-    </node>
-
     <!-- navigation files -->
     <arg name="motion_type" default="diff" />
 
