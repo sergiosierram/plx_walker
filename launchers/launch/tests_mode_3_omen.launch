@@ -31,6 +31,6 @@
     <node name="pose_force_pub" pkg="plx_walker_force_control" type="pose_force_pub.py" output="screen"/>
 
 	<!--shared nav node-->	
-    <node name="pose_force_pub" pkg="plx_walker_force_control" type="shared_nav.py" output="screen"/>
+    <node name="shared_nav" pkg="plx_walker_force_control" type="shared_nav.py" output="screen"/>
 
 </launch>
