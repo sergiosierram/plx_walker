@@ -30,7 +30,7 @@
     </node>
 
     <!--frc_acquirer node-->
-    <node name="frc_acquirer" pkg="plx_walker_force_control" type="frc_acquirer_daq_v2.py" output="screen">
+    <node name="frc_acquirer" pkg="plx_walker_force_control" 	type="frc_acquirer_daq_v2.py" output="screen"/>
 
     <node name="rosbag_record" pkg="rosbag" type="record"
       args="record -a -o mode1_pioneer_"/>
