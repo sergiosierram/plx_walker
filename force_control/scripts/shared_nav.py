@@ -71,7 +71,7 @@ class SharedNav(object):
 	def callback_path(self, msg):
 		self.path = msg
 		try:
-			self.nextPose = self.path.poses[5].pose
+			self.nextPose = self.path.poses[3].pose
 		except:
 			self.nextPose = self.path.poses[0].pose
 		theta_aux = efq([0, 0, self.nextPose.orientation.z, self.nextPose.orientation.w])
@@ -179,7 +179,7 @@ class SharedNav(object):
 	def main(self):
 		#rotMapOdom = int(input("Ingrese rotacion entre map y odom"))*np.pi/180
 		while not(self.rospy.is_shutdown()):
-			print(self.change1, self.change2, self.change3, self.change4, self.change5)
+			#print(self.change1, self.change2, self.change3, self.change4, self.change5)
 			if self.change1 and self.change2 and self.change3 and self.change4 and self.change5:
 				nextPoseX, nextPoseY  = self.nextPose.position.x, self.nextPose.position.y
 				userX, userY = self.pose_user.pose.pose.position.x, self.pose_user.pose.pose.position.y
