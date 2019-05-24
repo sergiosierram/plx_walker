@@ -19,7 +19,7 @@ class SharedNav(object):
 		self.pose_user_topic = self.rospy.get_param("pose_user_topic","/pose_force")
 		self.odom_topic = self.rospy.get_param("odom_topic","/RosAria/pose")
 		self.plan_poses_topic = self.rospy.get_param("plan_poses_topic","/move_base/TebLocalPlannerROS/local_plan")
-		self.nav_goal_topic = self.rospy.get_param("nav_goal_topic","/move_base_simple/goal")
+		self.nav_goal_topic = self.rospy.get_param("nav_goal_topic","/move_base/current_goal")
 		self.tf_topic = self.rospy.get_param("tf_topic","/tf")
 		self.shared_mode_topic = self.rospy.get_param("shared_mode_topic", "/shared_mode")
 		self.advertise_nav_topic = self.rospy.get_param("advertise_nav_topic","shared_nav_topic")
@@ -179,6 +179,7 @@ class SharedNav(object):
 	def main(self):
 		#rotMapOdom = int(input("Ingrese rotacion entre map y odom"))*np.pi/180
 		while not(self.rospy.is_shutdown()):
+			print(self.change1, self.change2, self.change3, self.change4, self.change5)
 			if self.change1 and self.change2 and self.change3 and self.change4 and self.change5:
 				nextPoseX, nextPoseY  = self.nextPose.position.x, self.nextPose.position.y
 				userX, userY = self.pose_user.pose.pose.position.x, self.pose_user.pose.pose.position.y
