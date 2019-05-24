@@ -23,6 +23,12 @@
       <rosparam file="$(find plx_walker_navigation)/config/teb_local_planner_$(arg motion_type)_params.yaml" command="load" />
       <rosparam file="$(find plx_walker_navigation)/config/global_planner_params.yaml" command="load" />
     </node>
+	
+	<!-- Path generator -->
+	<node name="gen_from_csv" pkg="path_generator" type="gen_from_csv.py" output="screen">
+		<rosparam file="$(find path_generator)/config/goals_from_csv_journal.yaml" command="load"/>
+		<param name="csv_file" type="string" value="$(find path_generator)/config/paths/path_points_journal.csv"/>
+	</node>
 
     <node name="rosbag_record" pkg="rosbag" type="record"
       args="record -a -o mode2_omen_"/>
