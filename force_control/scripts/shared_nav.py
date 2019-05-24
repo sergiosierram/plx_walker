@@ -2,7 +2,6 @@
 import rospy
 import numpy as np
 import tf
-#import scipy.signal as sg
 from geometry_msgs.msg import Twist, Wrench, Pose, PoseStamped
 from tf2_msgs.msg import TFMessage
 from nav_msgs.msg import Odometry, Path
@@ -185,9 +184,6 @@ class SharedNav(object):
 				userX, userY = self.pose_user.pose.pose.position.x, self.pose_user.pose.pose.position.y
 				distanceToNextPose = np.sqrt((nextPoseX-userX)**2+(nextPoseY-userY)**2)
 				thetaWindow = np.arctan(0.25/distanceToNextPose)
-				#thetaNav = np.arccos(self.nextPose.orientation.w)*2
-				#thetaWalker = np.arccos(self.pose_nav.pose.pose.orientation.w)*2 + rotMapOdom
-				#thetaUser = np.arccos(self.pose_user.pose.pose.orientation.w)*2 + rotMapOdom
 				thetaWalker = np.mod(self.thetaWalker + self.rotMapOdom, 2*np.pi)
 				thetaUser = np.mod(self.thetaUser + self.rotMapOdom, 2*np.pi)
 				thetaNav = np.mod(self.thetaNav + self.rotMapOdom, 2*np.pi)
@@ -196,11 +192,8 @@ class SharedNav(object):
 				Lb = (((self.win_width)/(2.0*self.max_angle))*(thetaNav - thetaWalker)) + (self.win_width/2.0)
 				thetaA = np.arctan(La/distanceToNextPose)
 				thetaB = np.arctan(Lb/distanceToNextPose)
-				#print(La, Lb, thetaA, thetaB, thetaDiff)
-				#print("--------------")
 				self.publish_markers(thetaWalker, thetaDiff, thetaA, thetaB)
 				print("thetaWalker",thetaWalker,"thetaNav",thetaNav,"thetaWindow",thetaWindow, "thetaUser",thetaUser, "thetaDiff", thetaDiff)
-				#print((thetaDiff-thetaA), " <= ", thetaUser, " <= ", (thetaDiff+thetaB))
 				if (thetaDiff-thetaA) <= thetaUser <= (thetaDiff+thetaB):
 					self.shared_mode.data = True
 					print("OK")
@@ -215,9 +208,7 @@ class SharedNav(object):
 
 
 if __name__ == '__main__':
-	print('a')
 	try:
 		ac = SharedNav()
 	except rospy.ROSInterruptException:
 		pass
-		print('b')

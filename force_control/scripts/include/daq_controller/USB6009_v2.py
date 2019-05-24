@@ -148,23 +148,23 @@ class USB6009():
     def readchannel(self,chanels,reads=1,sec=0):
         retorno = []
         resultado = []
-        print(0)
+        #print(0)
         # info[0] la cadena de configuración 1 de envio de canales
         # info[1] numero de canales validos
         info = self.crearcadena1(chanels)
         self.ep1.write(info[0], timeout=0)
         self.ep0.read(40, timeout=0)
-        print(1)
+        #print(1)
         #cadena de configuración 2
         info2 = self.crearcad2(info[1])
         self.ep1.write(info2, timeout=0)
         self.ep0.read(40, timeout=0)
-        print(2)
+        #print(2)
         # cadena de configuración 3
         info3 = self.crearcad3(info[1],chanels)
         self.ep1.write(info3, timeout=0)
         self.ep0.read(40, timeout=0)
-        print(3)
+        #print(3)
         '''
         con = 0
         while len(inicial) > con:
@@ -175,13 +175,13 @@ class USB6009():
             print(33)
             con = con + 1
         '''
-        print(4)
+        #print(4)
         for x in range(0, reads):
             self.ep1.write(self.read_leer, timeout=0)
             retorno.append(self.ep2.read(40, timeout=0))
             if sec > 0:
                 time.sleep(sec)
-        print(5)
+        #print(5)
         '''
         con = 0
         while len(final) > con:
@@ -189,7 +189,7 @@ class USB6009():
             self.ep0.read(40, timeout=0)
             con = con + 1
         '''
-        print(6)
+        #print(6)
         for x in range(0, reads):
             cadena = retorno[x]
             atem = []
@@ -198,7 +198,7 @@ class USB6009():
                 valor = valor * 6.37755 / 10000 - 31.16326
                 atem.append(valor)
             resultado.append(atem)
-        print(7)
+        #print(7)
         #usb.util.release_interface(self.dev, self.intf)
         #self.init()
         #self.reset()

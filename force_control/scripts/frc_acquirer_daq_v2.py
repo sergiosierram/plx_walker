@@ -63,7 +63,7 @@ class FrcAcquirer():
 		print('Calibration Done', means)
 		b, a = self.butter_lowpass(self.filter["cutoff"], 10, self.filter["order"])
 		while not self.exitFlag and not rospy.is_shutdown():
-			print("In the loop")
+			#print("In the loop")
 			data = [float(i) for i in self.daq.get_forces().split('\t')]
 			self.data_frc_ly = np.append(self.data_frc_ly, data[0]-means[0])
 			self.data_frc_lz = np.append(self.data_frc_lz, data[1]-means[1])

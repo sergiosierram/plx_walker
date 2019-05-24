@@ -81,11 +81,8 @@ class Switch():
 				ref_vel = self.aux_vel
 				self.enabled = True
 			else:
-				print("+")
 				if self.shared_mode:
-					print("-")
 					if self.change2 and self.change_usr_vel and self.change_nav_vel:
-						print("*")
 						if self.shared_status:
 							self.rospy.loginfo("Shared mode: User Control")
 							ref_vel = self.usr_vel
