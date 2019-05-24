@@ -15,7 +15,7 @@ class Switch():
 		self.insecure_vel_topic = self.rospy.get_param("insecure_vel_topic","/insecure_cmd_vel")
 		self.insecure_mode_topic = self.rospy.get_param("insecure_mode_topic","/insecure_mode")
 		self.shared_mode_topic = self.rospy.get_param("shared_mode_topic", "/shared_mode")
-		self.shared_mode = self.rospy.get_param("shared_mode", True)
+		self.shared_mode = self.rospy.get_param("shared_mode", False)
 		self.switch_rate = self.rospy.get_param("switch_rate", 20)
 		'''Subscribers'''
 		self.sub_aux_vel = self.rospy.Subscriber(self.aux_vel_topic, Twist, self.callback_aux_vel)
