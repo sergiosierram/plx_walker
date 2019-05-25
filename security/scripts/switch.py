@@ -92,7 +92,9 @@ class Switch():
 								ref_vel.linear.x = self.nav_vel.linear.x
 							else:
 								ref_vel.linear.x = self.usr_vel.linear.x
-							ref_vel.angular.z = self.nav_vel.angular.z
+							if ref_vel.linear.x < 0:
+								ref_vel.linear.x = 0
+							ref_vel.angular.z = self.usr_vel.angular.z
 						else:
 							self.rospy.loginfo("Shared mode: Robot Control")
 							ref_vel.linear.x = self.usr_vel.linear.x

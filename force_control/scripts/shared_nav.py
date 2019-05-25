@@ -19,7 +19,8 @@ class SharedNav(object):
 		self.pose_user_topic = self.rospy.get_param("pose_user_topic","/pose_force")
 		self.odom_topic = self.rospy.get_param("odom_topic","/RosAria/pose")
 		self.plan_poses_topic = self.rospy.get_param("plan_poses_topic","/move_base/TebLocalPlannerROS/local_plan")
-		self.nav_goal_topic = self.rospy.get_param("nav_goal_topic","/move_base/current_goal")
+		#self.nav_goal_topic = self.rospy.get_param("nav_goal_topic","/move_base/current_goal")
+		self.nav_goal_topic = self.rospy.get_param("nav_goal_topic","/move_base_simple/goal")
 		self.tf_topic = self.rospy.get_param("tf_topic","/tf")
 		self.shared_mode_topic = self.rospy.get_param("shared_mode_topic", "/shared_mode")
 		self.advertise_nav_topic = self.rospy.get_param("advertise_nav_topic","shared_nav_topic")
@@ -33,7 +34,7 @@ class SharedNav(object):
 		self.goal = PoseStamped()
 		self.shared_mode = Bool()
 		self.shared_nav_mode = False
-		self.win_width = 0.5
+		self.win_width = 2
 		self.max_angle = 90*np.pi/180
 		'''Subscribers'''
 		self.sub_pose_user = self.rospy.Subscriber(self.pose_user_topic, Odometry, self.callback_pose_user)
@@ -71,7 +72,8 @@ class SharedNav(object):
 	def callback_path(self, msg):
 		self.path = msg
 		try:
-			self.nextPose = self.path.poses[3].pose
+			n = len(self.path.poses)
+			self.nextPose = self.path.poses[n-1].pose
 		except:
 			self.nextPose = self.path.poses[0].pose
 		theta_aux = efq([0, 0, self.nextPose.orientation.z, self.nextPose.orientation.w])
@@ -160,7 +162,7 @@ class SharedNav(object):
 		new_pos = rotation.dot(pos) + translation
 		marker.pose.position.x = new_pos[0]
 		marker.pose.position.y = new_pos[1]
-		quat = qfe(0, 0, thetaWalker)
+		quat = qfe(0, 0, thetaDiff)
 		marker.pose.orientation.x = quat[0]
 		marker.pose.orientation.y = quat[1]
 		marker.pose.orientation.z = quat[2]
@@ -189,8 +191,17 @@ class SharedNav(object):
 				thetaUser = np.mod(self.thetaUser + self.rotMapOdom, 2*np.pi)
 				thetaNav = np.mod(self.thetaNav + self.rotMapOdom, 2*np.pi)
 				thetaDiff = np.mod(np.arctan2((nextPoseY-userY),(nextPoseX-userX)) + self.rotMapOdom, 2*np.pi)
-				La = (((-self.win_width)/(2.0*self.max_angle))*(thetaNav - thetaWalker)) + (self.win_width/2.0)
-				Lb = (((self.win_width)/(2.0*self.max_angle))*(thetaNav - thetaWalker)) + (self.win_width/2.0)
+				if np.pi > thetaDiff - thetaWalker > np.pi/2:
+					thetaDiff = thetaWalker + np.pi/2
+				elif thetaDiff - thetaWalker > np.pi:
+					thetaDiff = thetaWalker - np.pi/2
+				elif -np.pi < thetaDiff - thetaWalker < -np.pi/2 or np.pi > thetaDiff - thetaWalker > 3*np.pi/2:
+					thetaDiff = thetaWalker - np.pi/2
+				elif thetaDiff - thetaWalker < -np.pi:
+					thetaDiff = thetaWalker + np.pi/2
+				La = (((-self.win_width)/(2.0*self.max_angle))*(thetaDiff - thetaWalker)) + (self.win_width/2.0)
+				Lb = (((self.win_width)/(2.0*self.max_angle))*(thetaDiff - thetaWalker)) + (self.win_width/2.0)
+				print(La, Lb)
 				thetaA = np.arctan(La/distanceToNextPose)
 				thetaB = np.arctan(Lb/distanceToNextPose)
 				self.publish_markers(thetaWalker, thetaDiff, thetaA, thetaB)
