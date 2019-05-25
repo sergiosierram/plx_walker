@@ -88,7 +88,11 @@ class Switch():
 					if self.change2 and self.change_usr_vel and self.change_nav_vel:
 						if self.shared_status:
 							self.rospy.loginfo("Shared mode: User Control")
-							ref_vel = self.usr_vel
+							if self.usr_vel.linear.x > self.nav_vel.linear.x:
+								ref_vel.linear.x = self.nav_vel.linear.x
+							else:
+								ref_vel.linear.x = self.usr_vel.linear.x
+							ref_vel.angular.z = self.nav_vel.angular.z
 						else:
 							self.rospy.loginfo("Shared mode: Robot Control")
 							ref_vel.linear.x = self.usr_vel.linear.x

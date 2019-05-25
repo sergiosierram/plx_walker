@@ -33,7 +33,7 @@ class SharedNav(object):
 		self.goal = PoseStamped()
 		self.shared_mode = Bool()
 		self.shared_nav_mode = False
-		self.win_width = 0.8
+		self.win_width = 0.5
 		self.max_angle = 90*np.pi/180
 		'''Subscribers'''
 		self.sub_pose_user = self.rospy.Subscriber(self.pose_user_topic, Odometry, self.callback_pose_user)
