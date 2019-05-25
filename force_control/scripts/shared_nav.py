@@ -19,8 +19,8 @@ class SharedNav(object):
 		self.pose_user_topic = self.rospy.get_param("pose_user_topic","/pose_force")
 		self.odom_topic = self.rospy.get_param("odom_topic","/RosAria/pose")
 		self.plan_poses_topic = self.rospy.get_param("plan_poses_topic","/move_base/TebLocalPlannerROS/local_plan")
-		#self.nav_goal_topic = self.rospy.get_param("nav_goal_topic","/move_base/current_goal")
-		self.nav_goal_topic = self.rospy.get_param("nav_goal_topic","/move_base_simple/goal")
+		self.nav_goal_topic = self.rospy.get_param("nav_goal_topic","/move_base/current_goal")
+		#self.nav_goal_topic = self.rospy.get_param("nav_goal_topic","/move_base_simple/goal")
 		self.tf_topic = self.rospy.get_param("tf_topic","/tf")
 		self.shared_mode_topic = self.rospy.get_param("shared_mode_topic", "/shared_mode")
 		self.advertise_nav_topic = self.rospy.get_param("advertise_nav_topic","shared_nav_topic")
@@ -34,7 +34,7 @@ class SharedNav(object):
 		self.goal = PoseStamped()
 		self.shared_mode = Bool()
 		self.shared_nav_mode = False
-		self.win_width = 2
+		self.win_width = 1
 		self.max_angle = 90*np.pi/180
 		'''Subscribers'''
 		self.sub_pose_user = self.rospy.Subscriber(self.pose_user_topic, Odometry, self.callback_pose_user)
