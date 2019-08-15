@@ -8,9 +8,22 @@ from std_msgs.msg import Bool
 from sys import stdin
 
 class PlxSecurity():
-	def __init__(self):
+	def __init__(self, name):
+		self.name = name
+		self.initNode()
+		self.initParameters()
+		self.initSubscribers()
+		self.initPublishers()
+		self.initVariables()
+		self.main_security()						#Call of main node function
+
+	def initNode(self):
+		self.rospy = rospy
+		self.rospy.init_node(self.name, anonymous = True)
+		self.rospy.loginfo("[%s] Starting PlxSecurity", self.name)
+
+	def initParameters(self):
 		'''Parameters Inicialization '''
-		self.rospy = rospy																				#Rospy object inicialization
 		self.aux_cmd_vel_topic = self.rospy.get_param("aux_cmd_vel_topic", "/aux_cmd_vel")				#ROS Parameter: topic name of auxiliary velocity
 		self.insecure_vel_topic = self.rospy.get_param("insecure_vel_topic","/insecure_cmd_vel")		#ROS Parameter: topic name of insecure velocity
 		self.insecure_mode_topic = self.rospy.get_param("insecure_mode_topic","/insecure_mode")			#ROS Parameter: topic name of insecure mode
@@ -29,13 +42,9 @@ class PlxSecurity():
 		self.robot_params = {"w": self.rospy.get_param("robot_width", 0.5),
 							 "l": self.rospy.get_param("robot_length", 0.696)}				#ROS Parameters: Robot geometry parameters
 		self.width_ratio = self.rospy.get_param("width_ratio", 1.5)							#ROS Parameter: Scaling factor of velocity limitation zone
-		self.security_rate = self.rospy.get_param("security_rate", 30)						#ROS Parameter: Node performance rate
-		self.sonar_offset_front_x = 0.331													#Distance in mm at which the sonar is located
-		self.cmd_vel_x = 0											#Inicialization of velocity value
-		self.vel_insecure = Twist()									#Velocity definition as Twist value linear[x, y, z] angular[x, y, z]
-		self.change = {"lrf_top": False, "lrf_floor": False, "sonar": False}				#Variables for validation of new incoming data
-		self.lrf_top = {"angle_min":0, "angle_max":0, "angle_inc":0, "ranges": [], "offset": 0}				#Attributes of the upper LRF data message
-		self.lrf_floor = {"angle_min": 0, "angle_max": 0, "angle_inc": 0, "ranges": [], "offset": 0}		#Attributes of the floor LRF data message
+		self.security_rate = self.rospy.get_param("security_rate", 30)
+
+	def initSubscribers(self):
 		'''Subscribers'''
 		self.sub_aux_cmd_vel = self.rospy.Subscriber(self.aux_cmd_vel_topic, Twist,self.callback_aux_cmd_vel)	#Definition of aux velocity subscriber
 		if self.use_sensor["lrf_top"]: 																		#Conditionated subscription to top lrf topic
@@ -44,13 +53,20 @@ class PlxSecurity():
 			self.sub_lrf_floor = self.rospy.Subscriber(self.lrf_floor_topic, LaserScan, self.callback_lrf_floor) #Definition of floor lrf subscriber
 		if self.use_sensor["sonar"]:																		#Conditionated subscription to sonar
 			self.sub_sonar = self.rospy.Subscriber(self.sonar_topic, PointCloud, self.callback_sonar)		#Definition of sonar subscriber
+
+	def initPublishers(self):
 		'''Publishers'''
 		self.pub_insecure_vel = self.rospy.Publisher(self.insecure_vel_topic, Twist, queue_size = 10)		#Definition of insecure vel publisher
 		self.pub_insecure_mode = self.rospy.Publisher(self.insecure_mode_topic, Bool, queue_size = 10)		#Definition of insecure mode publisher
-		'''Node Configuration'''
-		self.rospy.init_node("plx_security", anonymous = True)		#Node inicialization
+
+	def initVariables(self):
+		self.sonar_offset_front_x = 0.331													#Distance in mm at which the sonar is located
+		self.cmd_vel_x = 0											#Inicialization of velocity value
+		self.vel_insecure = Twist()									#Velocity definition as Twist value linear[x, y, z] angular[x, y, z]
+		self.change = {"lrf_top": False, "lrf_floor": False, "sonar": False}				#Variables for validation of new incoming data
+		self.lrf_top = {"angle_min":0, "angle_max":0, "angle_inc":0, "ranges": [], "offset": 0}				#Attributes of the upper LRF data message
+		self.lrf_floor = {"angle_min": 0, "angle_max": 0, "angle_inc": 0, "ranges": [], "offset": 0}		#Attributes of the floor LRF data message
 		self.rate = self.rospy.Rate(self.security_rate)				#Node rate configuration
-		self.main_security()						#Call of main node function
 
 	def polar_2_cartesian(self,laser_params):
 		'''Function for polar coordinates to cartesian coordinates conversion'''
@@ -132,7 +148,6 @@ class PlxSecurity():
 		insecure = {"lrf_top": False, "lrf_floor": False, "sonar": False}
 		dist = {"lrf_top": 0, "lrf_floor": 0, "sonar": 0}
 		velmax = {"lrf_top": 0,	"lrf_floor": 0, "sonar": 0}
-
 		while not self.rospy.is_shutdown():
 			rstop = {"lrf": min(self.slow_distance["lrf"], self.stop_distance["lrf"]),
 					 "sonar": min(self.slow_distance["sonar"], self.stop_distance["sonar"])}
@@ -204,6 +219,6 @@ class PlxSecurity():
 
 if __name__ == '__main__':
 	try:
-		sec = PlxSecurity()
+		sec = PlxSecurity('PlxSecurity')
 	except rospy.ROSInterruptException:
 		pass

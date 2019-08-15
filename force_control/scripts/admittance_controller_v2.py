@@ -14,10 +14,11 @@ class AdmittanceController(object):
 		self.aux_cmd_vel_topic = self.rospy.get_param("aux_cmd_vel_topic", "/usr_cmd_vel")
 		self.frc_topic = self.rospy.get_param("frc_topic","/frc")
 		self.acontroller_rate = self.rospy.get_param("acontroller_rate",30)
+		# m = 4
 		self.controller_params = {
-					"m": self.rospy.get_param("mass",4),
-					"b_l": self.rospy.get_param("lineal_damping_c",10),
-					"k_l": self.rospy.get_param("lineal_stiffness_c",0.3),
+					"m": self.rospy.get_param("mass",0.1),
+					"b_l": self.rospy.get_param("lineal_damping_c",20),
+					"k_l": self.rospy.get_param("lineal_stiffness_c",11),
 					"j": self.rospy.get_param("inertia", 1),
 					"b_a": self.rospy.get_param("angular_damping_c", 15),
 					"k_a": self.rospy.get_param("angular_stiffness_c",0.7),
@@ -52,7 +53,7 @@ class AdmittanceController(object):
 		return linear[1][-1],1.5*angular[1][-1]
 
 	def callback_frc(self,msg):
-		self.frc = msg.force.y
+		self.frc = msg.force.y + abs(msg.force.z)
 		self.trq = msg.torque.y
 		self.change = True
 		if self.frc >= 0.35:

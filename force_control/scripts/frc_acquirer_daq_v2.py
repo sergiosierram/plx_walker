@@ -17,7 +17,7 @@ class FrcAcquirer():
 		self.frc_right = Wrench()
 		self.frc = Wrench()
 		self.exitFlag = False
-		self.fs = 30 	#Max 30. Hz
+		self.fs = 80 	#Max 30. Hz
 		self.tCalib = 1
 		self.calibrate = True
 		self.daq = DAQ_v2()
@@ -137,7 +137,7 @@ if __name__ == '__main__':
 		#thread1 = Thread(target = frc.wait_for_exit)
 		#thread1.start()
 		#frc.acquire()
-		thread1 = Thread(target = frc.acquire)
+		thread1 = Thread(target = frc.acquire_raw)
 		thread1.start()
 		frc.wait_for_exit()
 	except rospy.ROSInterruptException:
